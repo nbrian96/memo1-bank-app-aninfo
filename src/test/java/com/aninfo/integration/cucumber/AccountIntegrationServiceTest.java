@@ -1,13 +1,13 @@
 package com.aninfo.integration.cucumber;
 
-import com.aninfo.DemoApplication;
+import com.aninfo.Memo1BankApp;
 import com.aninfo.model.Account;
 import com.aninfo.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-@ContextConfiguration(classes = DemoApplication.class)
+@ContextConfiguration(classes = Memo1BankApp.class)
 @WebAppConfiguration
 public class AccountIntegrationServiceTest {
 

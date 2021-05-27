@@ -24,7 +24,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @RestController
 @SpringBootApplication
 @EnableSwagger2
-public class DemoApplication {
+public class Memo1BankApp {
 
 	@Autowired
 	private AccountService accountService;
@@ -33,7 +33,7 @@ public class DemoApplication {
 	private TransactionService transactionService;
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(Memo1BankApp.class, args);
 	}
 
 	@PostMapping("/accounts")
@@ -88,7 +88,7 @@ public class DemoApplication {
 
 	@GetMapping("/accounts/{cbu}/transactions")
 	public Collection<Transaction> getTransactions(@PathVariable Long cbu) {
-		return transactionService.getTransactions();
+		return transactionService.getTransactions(cbu);
 	}
 
 	@Bean
