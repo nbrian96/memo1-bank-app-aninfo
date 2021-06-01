@@ -82,7 +82,7 @@ public class Memo1BankApp {
 
 	@PostMapping("/accounts/{cbu}/transactions")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Transaction createTransaction(@RequestBody Transaction transaction, @PathVariable Long cbu) {
+	public Transaction createTransaction(@RequestBody Transaction transaction) {
 		return transactionService.createTransaction(transaction);
 	}
 
