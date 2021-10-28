@@ -28,9 +28,7 @@ public class AccountService {
     }
 
     public Collection<Account> getAccounts() {
-        Collection<Account> accounts = new ArrayList<>();
-        accountRepository.findAll().forEach(accounts::add);
-        return accounts;
+        return accountRepository.findAll();
     }
 
     public Optional<Account> findById(Long cbu) {
