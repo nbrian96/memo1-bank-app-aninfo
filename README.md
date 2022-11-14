@@ -1,2 +1,2 @@
-# memo1-bank-app
+# MEMO Bank App
 Memo1 - Backend API
