@@ -35,6 +35,9 @@ public class Memo1BankApp {
 		SpringApplication.run(Memo1BankApp.class, args);
 	}
 
+	/*
+	 * Account
+	 */
 	@PostMapping("/accounts")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Account createAccount(@RequestBody Account account) {
@@ -79,6 +82,78 @@ public class Memo1BankApp {
 		return accountService.deposit(cbu, sum);
 	}
 
+	/*
+	 * Transaccion
+	 */
+	@GetMapping("/transacciones")
+	public Collection<Transaccion> getTransacciones() {
+		return transaccionService.getTransacciones();
+	}
+
+	@GetMapping("/transaccionesCBU/{cbu}")
+	public Collection<Transaccion> getTransaccionesByCBU(@PathVariable Long cbu) {
+		return transaccionService.getTransaccionesByCBU(cbu);
+	}
+
+
+	@GetMapping("/transacciones/{id}")
+	public ResponseEntity<Transaccion> getTransaccion(@PathVariable Long id) {
+		Optional<Transaccion> transaccionOptional = transaccionService.findById(id);
+		return ResponseEntity.of(transaccionOptional);
+	}
+
+
+	@DeleteMapping("/transacciones/{id}")
+	public void deleteTransaccion(@PathVariable Long id) {
+		transaccionService.deleteById(id);
+	}
+
+	@PostMapping("/depositos")
+	public ResponseEntity depositar(@RequestBody Transaccion transaccion) {
+
+		Long cbu = transaccionService.getCbu(transaccion);
+		Double importe = transaccionService.getImporte(transaccion);
+
+		Optional<Account> accountOptional = accountService.findById(cbu);
+
+		if (!accountOptional.isPresent())
+			return ResponseEntity.notFound().build();
+
+		Account account = accountOptional.get();
+		if (!accountService.depositar(account, importe))
+			return ResponseEntity.notFound().build();
+
+		transaccion = transaccion;
+
+		transaccionService.createTransaccion(transaccion);
+
+		transaccion = transaccion;
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+
+	@PostMapping("/extracciones")
+	public ResponseEntity extraer(@RequestBody Transaccion transaccion) {
+
+		Long cbu = transaccionService.getCbu(transaccion);
+		Double importe = transaccionService.getImporte(transaccion);
+
+		Optional<Account> accountOptional = accountService.findById(cbu);
+
+		if (!accountOptional.isPresent())
+			return ResponseEntity.notFound().build();
+
+		Account account = accountOptional.get();
+		if (!accountService.extraer(account, importe))
+			return ResponseEntity.notFound().build();
+
+		transaccionService.setImporte(transaccion, -importe);
+		transaccionService.createTransaccion(transaccion);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+
+	/*
+	 * OTROS
+	 */
 	@Bean
 	public Docket apiDocket() {
 		return new Docket(DocumentationType.SWAGGER_2)

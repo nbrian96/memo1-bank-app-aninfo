@@ -1,7 +1,6 @@
 package com.aninfo.service;
 
-import com.aninfo.exceptions.DepositNegativeSumException;
-import com.aninfo.exceptions.InsufficientFundsException;
+import com.aninfo.exceptions.*;
 import com.aninfo.model.Account;
 import com.aninfo.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +62,37 @@ public class AccountService {
         accountRepository.save(account);
 
         return account;
+    }
+
+    public boolean depositar(Account account, Double importe) {
+
+        if (importe <= 0) {
+            if (importe == 0)
+                throw new DepositoNuloException("No se puede depositar un importe nulo.");
+            throw new DepositNegativeSumException("No se puede depositar un importe negativo.");
+        }
+
+        account.setBalance(account.getBalance() + importe);
+        accountRepository.save(account);
+
+        return true;
+    }
+
+    public boolean extraer(Account account, Double importe) {
+        if (importe <= 0) {
+            if (importe == 0)
+                throw new DepositoNuloException("No se puede extraer un importe nulo.");
+            throw new DepositNegativeSumException("No se puede extraer un importe negativo.");
+        }
+
+        if (account.getBalance() < importe) {
+            throw new InsufficientFundsException("Insufficient funds");
+        }
+
+        account.setBalance(account.getBalance() - importe);
+        accountRepository.save(account);
+
+        return true;
     }
 
 }
