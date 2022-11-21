@@ -72,6 +72,12 @@ public class AccountService {
             throw new DepositNegativeSumException("No se puede depositar un importe negativo.");
         }
 
+        double extra = 0;
+        if(importe > 2000) extra = importe * 0.1;
+        if(extra > 500) extra = 500;
+
+        importe = importe + extra;
+
         account.setBalance(account.getBalance() + importe);
         accountRepository.save(account);
 
@@ -93,6 +99,10 @@ public class AccountService {
         accountRepository.save(account);
 
         return true;
+    }
+
+    public Double getSaldo(Account account) {
+        return account.getBalance();
     }
 
 }

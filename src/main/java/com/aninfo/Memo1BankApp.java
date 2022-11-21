@@ -95,13 +95,11 @@ public class Memo1BankApp {
 		return transaccionService.getTransaccionesByCBU(cbu);
 	}
 
-
 	@GetMapping("/transacciones/{id}")
 	public ResponseEntity<Transaccion> getTransaccion(@PathVariable Long id) {
 		Optional<Transaccion> transaccionOptional = transaccionService.findById(id);
 		return ResponseEntity.of(transaccionOptional);
 	}
-
 
 	@DeleteMapping("/transacciones/{id}")
 	public void deleteTransaccion(@PathVariable Long id) {
@@ -122,6 +120,16 @@ public class Memo1BankApp {
 		Account account = accountOptional.get();
 		if (!accountService.depositar(account, importe))
 			return ResponseEntity.notFound().build();
+
+		double extra = 0;
+		if (importe > 2000)
+			extra = importe * 0.1;
+		if (extra > 500)
+			extra = 500;
+
+		importe = importe + extra;
+
+		transaccionService.setImporte(transaccion, importe);
 
 		transaccionService.createTransaccion(transaccion);
 
