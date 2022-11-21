@@ -123,11 +123,8 @@ public class Memo1BankApp {
 		if (!accountService.depositar(account, importe))
 			return ResponseEntity.notFound().build();
 
-		transaccion = transaccion;
-
 		transaccionService.createTransaccion(transaccion);
 
-		transaccion = transaccion;
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
